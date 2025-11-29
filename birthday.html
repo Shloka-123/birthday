@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday</title>
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background: #fffbfb; /* updated background */
+        overflow: hidden;
+        position: relative;
+    }
+
+
+/* ENVELOPE */
+#envelope {
+    width: 1000px;      /* big envelope */
+    height: 600px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;   /* moves envelope a bit down */
+}
+
+
+
+
+    .env-body {
+        width: 100%;
+        height: 100%;
+        background: #fdfbe5; /* butter yellow */
+        border-radius: 10px;
+        position: absolute;
+        bottom: 0;
+        z-index: 1;
+        box-sizing: border-box;
+    }
+
+    .env-flap {
+        width: 100%;
+        height: 50%;
+        background: #fcf5d5; /* slightly darker flap */
+        clip-path: polygon(0 0, 50% 100%, 100% 0); /* triangular flap */
+        position: absolute;
+        top: 0;
+        z-index: 2;
+        transform-origin: top center;
+        transition: transform 0.7s ease;
+        box-sizing: border-box;
+    }
+
+    .click-text {
+        position: absolute;
+        top: 45%;
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        color: #6e4f3a;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    /* HAPPY BIRTHDAY TEXT */
+    #message {
+        font-size: 60px;
+        font-weight: 700;
+        color: #5a4230;
+        text-align: center;
+        margin-bottom: 30px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+    }
+
+    /* PHOTOS */
+    #photos {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    #photos img {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease, transform 0.3s ease;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        #envelope { width: 350px; height: 220px; }
+        #message { font-size: 45px; }
+        #photos img { width: 100px; height: 100px; }
+    }
+
+    /* FULLSCREEN IMAGE OVERLAY */
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+
+    #overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 10px;
+    }
+</style>
+</head>
+<body>
+
+<!-- ENVELOPE -->
+<div id="envelope">
+    <div class="env-flap"></div>
+    <div class="env-body"></div>
+    <div class="click-text">Click Me</div>
+</div>
+
+<!-- MESSAGE -->
+<div id="message">Happy Birthday Sanju !!!!!!!!!!!!!!!!!</div>
+
+<!-- PHOTOS -->
+<div id="photos">
+  <img src="pic1.jpg">
+<img src="pic2.jpg">
+<img src="pic3.jpg">
+<img src="pic4.jpg">
+<img src="pic5.jpg">
+<img src="pic6.jpg">
+<img src="pic7.jpg">
+<img src="pic8.jpg">
+
+
+</div>
+
+<!-- FULLSCREEN IMAGE OVERLAY -->
+<div id="overlay">
+    <img src="" alt="Full Image">
+</div>
+
+<!-- Canvas Confetti Library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+    const envelope = document.getElementById("envelope");
+    const flap = document.querySelector(".env-flap");
+    const message = document.getElementById("message");
+    const photos = document.querySelectorAll("#photos img");
+    const overlay = document.getElementById("overlay");
+    const overlayImg = overlay.querySelector("img");
+
+    // Open envelope
+    envelope.onclick = () => {
+        flap.style.transform = "rotateX(-160deg)";
+        setTimeout(() => { envelope.style.opacity = "0"; }, 650);
+
+        setTimeout(() => {
+            envelope.style.display = "none";
+            message.style.opacity = "1";
+            message.style.transform = "translateY(0)";
+
+            // Show photos
+            photos.forEach((img, i) => {
+                setTimeout(() => {
+                    img.style.opacity = "1";
+                    img.style.transform = "translateY(0)";
+                }, 300 * (i + 1));
+            });
+
+            // Confetti
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 100, spread: 100, origin: { y: 0.6 } });
+        }, 1200);
+    };
+
+    // Click to enlarge images
+    photos.forEach(img => {
+        img.addEventListener('click', () => {
+            overlayImg.src = img.src;
+            overlay.style.display = 'flex';
+        });
+    });
+
+    // Close overlay
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        overlayImg.src = '';
+    });
+</script>
+
+</body>
+</html>
